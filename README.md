@@ -9,6 +9,8 @@ pillar → a single layer (weights, bias, activation, forward/backward).
 
 pillarMC → manages multiple layers and connects them.
 
+downhill → manages the optimizer state
+
 piron → training engine (optimizers, batches, epochs).
 
 Features
