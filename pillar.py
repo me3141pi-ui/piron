@@ -78,7 +78,7 @@ class pillar:
         self.input = prev_output
         self.pre_activation = self.weights @ prev_output + self.bias
         self.activation = self.activator(self.pre_activation)
-        return self.activation#*bernoulli_mask(self._size,p = self.dropout)
+        return self.activation*bernoulli_mask(self._size[1],p = self.dropout)
 
     #to be used in forward pass for prediction not training
     def forward(self,prev_output):
@@ -121,3 +121,4 @@ class pillar:
     def update_parameter(self,dw,db):
         self.weights -= dw
         self.bias -= db
+
