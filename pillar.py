@@ -27,15 +27,18 @@ def bernoulli_mask(n, p=0.5):
     return (rand_vals > p).astype(jnp.int32)
 
 class pillar:
-    def __init__(self,input_dim,output_dim,activator = 'relu',beta1 = 0,beta2 = 0,dropout = 0):
+    def __init__(self,input_dim,output_dim,activator = 'relu',dropout = 0):
         #defining the input and output dimensions for the layer(the input dimension is the output dimension of previous layer
         self.output_dim = output_dim
         self.input_dim = input_dim
         self._size = (input_dim,output_dim)
         #ACTIVATION DATA
         if type(activator) == str:
-            self.activator = activation_dict[activator]
-            self.activator_derivative = derivative_dict[activator]
+            try:
+                self.activator = activation_dict[activator]
+                self.activator_derivative = derivative_dict[activator]
+            except Exception :
+                raise Exception("Activation function ",activator," not defined")
         else:
             # If user passed a custom function, fallback to vmap+grad (scalar-safe functions only)
             self.activator = activator
@@ -52,7 +55,6 @@ class pillar:
         self.weight_grad_batch_sum = jnp.zeros_like(self.weights)
         self.bias_grad = jnp.zeros_like(self.bias)
         self.bias_grad_batch_sum = jnp.zeros_like(self.bias)
-
 
     #returns the size of the layer (aka output_dim,input_dim)
     def size(self):
@@ -87,7 +89,6 @@ class pillar:
         self.activation = self.activator(self.pre_activation)
         return self.activation
 
-
     #handles the backward pass
     def backward_pass(self,del_l,wl):
         del_curr = self.activator_derivative(self.pre_activation) * (wl.T@del_l)
@@ -121,4 +122,3 @@ class pillar:
     def update_parameter(self,dw,db):
         self.weights -= dw
         self.bias -= db
-
