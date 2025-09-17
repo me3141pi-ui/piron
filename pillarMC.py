@@ -74,3 +74,10 @@ class pillarMC:
             w_grads.append(w_g)
             b_grads.append(b_g)
         return w_grads, b_grads
+
+    def inout_dim(self):
+        if len(self.layers)==0:
+            raise Exception('Please add layers first')
+        x_in , red = self.layers[0].size()
+        red,y_out = self.layers[-1].size()
+        return x_in,y_out
