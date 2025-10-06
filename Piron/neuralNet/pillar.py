@@ -1,8 +1,6 @@
 from .activations import activation_dict,derivative_dict
 import numpy as np
-import time
-import jax
-import random
+
 
 '''
 BASIC STRUCTURE OF PILLAR CLASS
@@ -20,10 +18,7 @@ BASIC STRUCTURE OF PILLAR CLASS
     c) i have moved it to a seperate optimizer class
 '''
 def bernoulli_mask(n, p=0.5):
-    # derive a key from current system time
-    seed = int(time.time() * 1e6) % (2**31 - 1)
-    key = jax.random.PRNGKey(seed)
-    rand_vals = jax.random.uniform(key, shape=(n, 1))
+    rand_vals = np.random.rand(n, 1)   # uniform values in [0, 1)
     return (rand_vals > p).astype(np.int32)
 
 class pillar:
@@ -120,3 +115,4 @@ class pillar:
     def update_parameter(self,dw,db):
         self.weights -= dw
         self.bias -= db
+
